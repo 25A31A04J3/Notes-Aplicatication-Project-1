@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void createNote() {
+    FILE *fp;
+    char filename[50], ch;
+
+    printf("Enter note name (with .txt): ");
+    scanf("%s", filename);
+
+    fp = fopen(filename, "w");
+    if (fp == NULL) {
+        printf("Error creating file!\n");
+        return;
+    }
+
+    printf("Enter note content (Press # to save):\n");
+    getchar();   // clear buffer
+
+    while ((ch = getchar()) != '#') {
+        fputc(ch, fp);
+    }
+
+    fclose(fp);
+    printf("Note saved successfully ✅\n");
+}
+
+void viewNote() {
+    FILE *fp;
+    char filename[50], ch;
+
+    printf("Enter note name to view: ");
+    scanf("%s", filename);
+
+    fp = fopen(filename, "r");
+    if (fp == NULL) {
+        printf("Note not found ❌\n");
+        return;
+    }
+
+    printf("\n--- Note Content ---\n");
+    while ((ch = fgetc(fp)) != EOF) {
+        putchar(ch);
+    }
+    printf("\n--------------------\n");
+
+    fclose(fp);
+}
+
+void deleteNote() {
+    char filename[50];
+
+    printf("Enter note name to delete: ");
+    scanf("%s", filename);
+
+    if (remove(filename) == 0) {
+        printf("Note deleted successfully 🗑️\n");
+    } else {
+        printf("Unable to delete note ❌\n");
+    }
+}
+
+int main() {
+    int choice;
+
+    do {
+        printf("\n===== NOTES APPLICATION =====\n");
+        printf("1. Create Note\n");
+        printf("2. View Note\n");
+        printf("3. Delete Note\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                createNote();
+                break;
+            case 2:
+                viewNote();
+                break;
+            case 3:
+                deleteNote();
+                break;
+            case 4:
+                printf("Thank you! Exiting... 👋\n");
+                break;
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    } while (choice != 4);
+
+    return 0;
+}
